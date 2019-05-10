@@ -30,7 +30,7 @@ Looking for a script to add blips on the map for only certain players -- like po
 
 - Use ``TriggerEvent("eblips:remove", serverID)`` when you want to stop a person who is showing up on the map from showing on the map.
 
-- For ``eblips:add``: ``name`` is the text that shows on the map when a blip is selected,, ``src`` should be the player's server ID, and ``color`` is the blip color.
+- For ``eblips:add``: ``name`` is the text that shows on the map when a blip is selected, ``src`` should be the player's server ID, and ``color`` is the blip color.
 
 - See https://wiki.gtanet.work/index.php?title=Blips for blip color codes (at bottom).
 
