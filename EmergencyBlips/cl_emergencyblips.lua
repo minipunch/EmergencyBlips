@@ -1,6 +1,6 @@
 -- by: minipunch
--- for: USA Realism RP
--- purpose: provide public servant with blips for all other active emergency personnel
+-- for: Initially made for USA Realism RP (https://usarrp.net)
+-- purpose: Provide public servant with blips for all other active emergency personnel
 
 local ACTIVE = false
 local ACTIVE_EMERGENCY_PERSONNEL = {}
