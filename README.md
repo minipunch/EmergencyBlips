@@ -32,6 +32,8 @@ Looking for a script to add blips on the map for only certain players -- like po
 
 - For ``eblips:add``: ``name`` is the text that shows on the map when a blip is selected, ``src`` should be the player's server ID, and ``color`` is the blip color.
 
+- Both events are server events.
+
 - See https://wiki.gtanet.work/index.php?title=Blips for blip color codes (at bottom).
 
 
