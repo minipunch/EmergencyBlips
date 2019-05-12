@@ -1,6 +1,6 @@
 -- by: minipunch
 -- for: Initially made for USA Realism RP (https://usarrp.net)
--- purpose: Provide public servant with blips for all other active emergency personnel
+-- purpose: Provide public servants with blips for all other active emergency personnel
 
 local ACTIVE_EMERGENCY_PERSONNEL = {}
 
@@ -11,8 +11,6 @@ person = {
  name = "Taylor Weitman"
 }
 ]]
-
--- TODO: check if person is on duty when they drop, if so remove them from the ACTIVE_EMERGENCY_PERSONNEL collection?
 
 RegisterServerEvent("eblips:add")
 AddEventHandler("eblips:add", function(person)
@@ -33,4 +31,11 @@ AddEventHandler("eblips:remove", function(src)
 	end
 	-- deactive blips when off duty --
 	TriggerClientEvent("eblips:toggle", src, false)
+end)
+
+-- Clean up blip entry for on duty player who leaves --
+AddEventHandler("playerDropped", function()
+	if ACTIVE_EMERGENCY_PERSONNEL[source] then
+		ACTIVE_EMERGENCY_PERSONNEL[source] = nil
+	end
 end)
