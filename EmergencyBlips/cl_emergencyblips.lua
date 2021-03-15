@@ -3,7 +3,8 @@
 -- purpose: Provide public servant with blips for all other active emergency personnel
 
 local ACTIVE = false
-local ACTIVE_EMERGENCY_PERSONNEL = {}
+
+local currentBlips = {}
 
 ------------
 -- events --
@@ -19,30 +20,22 @@ AddEventHandler("eblips:toggle", function(on)
 end)
 
 RegisterNetEvent("eblips:updateAll")
-AddEventHandler("eblips:updateAll", function(personnel)
-	ACTIVE_EMERGENCY_PERSONNEL = personnel
+AddEventHandler("eblips:updateAll", function(activeEmergencyPersonnel)
+	if ACTIVE then
+		RemoveAnyExistingEmergencyBlips()
+		RefreshBlips(activeEmergencyPersonnel)
+	end
 end)
-
-RegisterNetEvent("eblips:update")
-AddEventHandler("eblips:update", function(person)
-	ACTIVE_EMERGENCY_PERSONNEL[person.src] = person
-end)
-
-RegisterNetEvent("eblips:remove")
-AddEventHandler("eblips:remove", function(src)
-	RemoveAnyExistingEmergencyBlipsById(src)
-end)
-
 
 ---------------
 -- functions --
 ---------------
 function RemoveAnyExistingEmergencyBlips()
-	for src, info in pairs(ACTIVE_EMERGENCY_PERSONNEL) do
-		local possible_blip = GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(src)))
-		if possible_blip ~= 0 then
-			RemoveBlip(possible_blip)
-			ACTIVE_EMERGENCY_PERSONNEL[src] = nil
+	for i = #currentBlips, 1, -1 do
+		local b = currentBlips[i]
+		if b ~= 0 then
+			RemoveBlip(b)
+			table.remove(currentBlips, i)
 		end
 	end
 end
@@ -55,30 +48,17 @@ function RemoveAnyExistingEmergencyBlipsById(id)
 		end
 end
 
------------------------------------------------------
--- Watch for emergency personnel to show blips for --
------------------------------------------------------
-Citizen.CreateThread(function()
-	while true do
-		if ACTIVE then
-			for src, info in pairs(ACTIVE_EMERGENCY_PERSONNEL) do
-				local player = GetPlayerFromServerId(src)
-				local ped = GetPlayerPed(player)
-				if GetPlayerPed(-1) ~= ped then
-					if GetBlipFromEntity(ped) == 0 then
-						local blip = AddBlipForEntity(ped)
-						SetBlipSprite(blip, 1)
-						SetBlipColour(blip, info.color)
-						SetBlipAsShortRange(blip, true)
-						SetBlipDisplay(blip, 4)
-						SetBlipShowCone(blip, true)
-						BeginTextCommandSetBlipName("STRING")
-						AddTextComponentString(info.name)
-						EndTextCommandSetBlipName(blip)
-					end
-				end
-			end
-		end
-		Wait(1)
+function RefreshBlips(activeEmergencyPersonnel)
+	for src, info in pairs(activeEmergencyPersonnel) do
+		local blip = AddBlipForCoord(info.coords.x, info.coords.y, info.coords.z)
+		SetBlipSprite(blip, 1)
+		SetBlipColour(blip, info.color)
+		SetBlipAsShortRange(blip, true)
+		SetBlipDisplay(blip, 4)
+		SetBlipShowCone(blip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString(info.name)
+		EndTextCommandSetBlipName(blip)
+		table.insert(currentBlips, blip)
 	end
-end)
+end
