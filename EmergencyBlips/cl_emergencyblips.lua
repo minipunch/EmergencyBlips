@@ -40,14 +40,6 @@ function RemoveAnyExistingEmergencyBlips()
 	end
 end
 
-function RemoveAnyExistingEmergencyBlipsById(id)
-		local possible_blip = GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(id)))
-		if possible_blip ~= 0 then
-			RemoveBlip(possible_blip)
-			ACTIVE_EMERGENCY_PERSONNEL[id] = nil
-		end
-end
-
 function RefreshBlips(activeEmergencyPersonnel)
 	for src, info in pairs(activeEmergencyPersonnel) do
 		local blip = AddBlipForCoord(info.coords.x, info.coords.y, info.coords.z)
