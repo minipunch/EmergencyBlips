@@ -41,16 +41,19 @@ function RemoveAnyExistingEmergencyBlips()
 end
 
 function RefreshBlips(activeEmergencyPersonnel)
+	local myServerId = GetPlayerServerId(PlayerId())
 	for src, info in pairs(activeEmergencyPersonnel) do
-		local blip = AddBlipForCoord(info.coords.x, info.coords.y, info.coords.z)
-		SetBlipSprite(blip, 1)
-		SetBlipColour(blip, info.color)
-		SetBlipAsShortRange(blip, true)
-		SetBlipDisplay(blip, 4)
-		SetBlipShowCone(blip, true)
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(info.name)
-		EndTextCommandSetBlipName(blip)
-		table.insert(currentBlips, blip)
+		if src ~= myServerId then
+			local blip = AddBlipForCoord(info.coords.x, info.coords.y, info.coords.z)
+			SetBlipSprite(blip, 1)
+			SetBlipColour(blip, info.color)
+			SetBlipAsShortRange(blip, true)
+			SetBlipDisplay(blip, 4)
+			SetBlipShowCone(blip, true)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString(info.name)
+			EndTextCommandSetBlipName(blip)
+			table.insert(currentBlips, blip)
+		end
 	end
 end
