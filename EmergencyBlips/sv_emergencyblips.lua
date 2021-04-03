@@ -4,7 +4,7 @@
 
 local ACTIVE_EMERGENCY_PERSONNEL = {}
 
-local CLIENT_UPDATE_INTERVAL_MS = 3000
+local CLIENT_UPDATE_INTERVAL_SECONDS = 3
 
 --[[
 person = {
@@ -36,11 +36,15 @@ AddEventHandler("playerDropped", function()
 end)
 
 Citizen.CreateThread(function()
+	local lastUpdateTime = os.time()
 	while true do
-		for id, info in pairs(ACTIVE_EMERGENCY_PERSONNEL) do
-			ACTIVE_EMERGENCY_PERSONNEL[id].coords = GetEntityCoords(GetPlayerPed(id))
-			TriggerClientEvent("eblips:updateAll", id, ACTIVE_EMERGENCY_PERSONNEL)
+		if os.difftime(os.time(), lastUpdateTime) >= CLIENT_UPDATE_INTERVAL_SECONDS then
+			for id, info in pairs(ACTIVE_EMERGENCY_PERSONNEL) do
+				ACTIVE_EMERGENCY_PERSONNEL[id].coords = GetEntityCoords(GetPlayerPed(id))
+				TriggerClientEvent("eblips:updateAll", id, ACTIVE_EMERGENCY_PERSONNEL)
+			end
+			lastUpdateTime = os.time()
 		end
-		Wait(CLIENT_UPDATE_INTERVAL_MS)
+		Wait(500)
 	end
 end)
